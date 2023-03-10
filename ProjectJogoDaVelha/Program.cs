@@ -111,26 +111,3 @@ void AtribuirEscolha()
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-//void ImprimirTabu(char pos)
-//{
-//    for (int l = 0; l < matvelha.GetLength(0); l++)
-//    {
-//        for (int c = 0; c < matvelha.GetLength(1); c++)
-//        {
-//            Console.Write("|" + matvelha[l, c] + "|");
-
-//        }
-//        Console.WriteLine();
-//    }
-//}
