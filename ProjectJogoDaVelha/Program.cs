@@ -1,34 +1,40 @@
 ﻿char[,] matvelha = { { '1', '2', '3' }, { '4', '5', '6' }, { '7', '8', '9' } };
 char esc = ' ';
 bool fim = false, vitoria = false, velha = false;
-int jogador = 0, rodada = 5;
+int jogador = 0, rodada = 0;
 
 ImprimirMatriz();
 do
 {
-    //Verificando qual jogador deve jogar
-    if (jogador % 2 == 0)
+    if (rodada == 9 && fim == false)
     {
-        Console.Write("Escolha jogador X: ");
-        esc = char.Parse(Console.ReadLine());
+        ImprimirMatriz();
+        Console.WriteLine("Velha!!!");
+        break;
     }
     else
     {
-        Console.Write("Escolha jogador O: ");
-        esc = char.Parse(Console.ReadLine());
-    }
-    //Chamando e verificando se o digito esta correto.
-    if (VerificarDigito(esc))
-    {
-
-
-        VerificarLugar(esc);
-
-    }
-    else if (!VerificarDigito(esc))
-    {
-        Console.WriteLine("Digito incorreto. Informe outro.");
-        Console.ReadLine();
+        //Verificando qual jogador deve jogar
+        if (jogador % 2 == 0)
+        {
+            Console.Write("Escolha jogador X: ");
+            esc = char.Parse(Console.ReadLine());
+        }
+        else
+        {
+            Console.Write("Escolha jogador O: ");
+            esc = char.Parse(Console.ReadLine());
+        }
+        //Chamando e verificando se o digito esta correto.
+        if (VerificarDigito(esc))
+        {
+            VerificarLugar(esc);
+        }
+        else if (!VerificarDigito(esc))
+        {
+            Console.WriteLine("Digito incorreto. Informe outro.");
+            Console.ReadLine();
+        }
     }
     rodada++;
 } while (!fim);
@@ -75,7 +81,6 @@ bool VerificarDigito(char esc)
             if (esc.Equals(matvelha[l, c]))
             {
                 verifica = true;
-                break;
             }
         }
     }
@@ -113,7 +118,7 @@ void AtribuirEscolha()
                         Console.ReadLine();
                     }
                 }
-                else if(esc != matvelha[l, c])
+                else if (esc != matvelha[l, c])
                 {
                     Console.WriteLine("VELHA!!!!!");
                     fim = true;
@@ -126,37 +131,36 @@ void AtribuirEscolha()
 
 bool CondicaoVitoria()
 {
-    if (rodada > 4)
-    {
-        for (int l = 0; l < matvelha.GetLength(0); l++)
-        {
-            for (int c = 0; c < matvelha.GetLength(1); c++)
-            {
-                //Se as linhs forem iguais
-                if ((matvelha[l, 0] == matvelha[l, 1]) && (matvelha[l, 1] == matvelha[l, 2]))
-                {
-                    vitoria = true;
-                    break;
-                }
-                //Colunas iguais
-                else if ((matvelha[0, c] == matvelha[1, c]) && (matvelha[1, c] == matvelha[2, c]))
-                {
-                    vitoria = true;
-                    break;
 
-                }
-                //Diagonal principal
-                else if ((matvelha[0, 0] == matvelha[1, 1]) && (matvelha[1, 1] == matvelha[2, 2]))
-                {
-                    vitoria = true;
-                }
-                //Diagonal secundária
-                else if ((matvelha[0, 2] == matvelha[1, 1]) && (matvelha[1, 1] == matvelha[2, 0]))
-                {
-                    vitoria = true;
-                }
+    for (int l = 0; l < matvelha.GetLength(0); l++)
+    {
+        for (int c = 0; c < matvelha.GetLength(1); c++)
+        {
+            //Se as linhs forem iguais
+            if ((matvelha[l, 0] == matvelha[l, 1]) && (matvelha[l, 1] == matvelha[l, 2]))
+            {
+                vitoria = true;
+                break;
+            }
+            //Colunas iguais
+            else if ((matvelha[0, c] == matvelha[1, c]) && (matvelha[1, c] == matvelha[2, c]))
+            {
+                vitoria = true;
+                break;
+
+            }
+            //Diagonal principal
+            else if ((matvelha[0, 0] == matvelha[1, 1]) && (matvelha[1, 1] == matvelha[2, 2]))
+            {
+                vitoria = true;
+            }
+            //Diagonal secundária
+            else if ((matvelha[0, 2] == matvelha[1, 1]) && (matvelha[1, 1] == matvelha[2, 0]))
+            {
+                vitoria = true;
             }
         }
     }
+
     return vitoria;
 }
