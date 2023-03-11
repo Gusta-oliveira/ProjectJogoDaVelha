@@ -1,19 +1,11 @@
-﻿char[,] matvelha = {{'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'}};
+﻿char[,] matvelha = { { '1', '2', '3' }, { '4', '5', '6' }, { '7', '8', '9' } };
 char esc = ' ';
-bool fim = false;
-int jogador = 0;
+bool fim = false, vitoria = false, velha = false;
+int jogador = 0, rodada = 5;
 
+ImprimirMatriz();
 do
 {
-    //Impressão da matriz
-    for (int l = 0; l < matvelha.GetLength(0); l++)
-    {
-        for (int c = 0; c < matvelha.GetLength(1); c++)
-        {
-            Console.Write("|" + matvelha[l, c] + "|");
-        }
-        Console.WriteLine();
-    }
     //Verificando qual jogador deve jogar
     if (jogador % 2 == 0)
     {
@@ -25,30 +17,42 @@ do
         Console.Write("Escolha jogador O: ");
         esc = char.Parse(Console.ReadLine());
     }
+    //Chamando e verificando se o digito esta correto.
     if (VerificarDigito(esc))
     {
+
+
         VerificarLugar(esc);
-        Console.WriteLine("Digete qualquer tecla para avançar");
-        Console.ReadLine();
+
     }
-    else
+    else if (!VerificarDigito(esc))
     {
-        Console.Clear();
-        Console.WriteLine("Digito inválido! Aperte qualquer tecla para continuar.");
+        Console.WriteLine("Digito incorreto. Informe outro.");
         Console.ReadLine();
     }
-    Console.Clear();
-
+    rodada++;
 } while (!fim);
-
+//Impressão da matriz
+void ImprimirMatriz()
+{
+    Console.Clear();
+    for (int l = 0; l < matvelha.GetLength(0); l++)
+    {
+        for (int c = 0; c < matvelha.GetLength(1); c++)
+        {
+            Console.Write("|" + matvelha[l, c] + "|");
+        }
+        Console.WriteLine();
+    }
+}
 
 //Verificando se o espaço solicitado esta disponivel
 bool VerificarLugar(char esc)
 {
     bool disponivel = false;
-    for(int l = 0; l < matvelha.GetLength(0); l++)
+    for (int l = 0; l < matvelha.GetLength(0); l++)
     {
-        for(int c = 0; c < matvelha.GetLength(1);c++)
+        for (int c = 0; c < matvelha.GetLength(1); c++)
         {
             if (esc == matvelha[l, c])
             {
@@ -64,9 +68,9 @@ bool VerificarLugar(char esc)
 bool VerificarDigito(char esc)
 {
     bool verifica = false;
-    for(int l = 0;l < matvelha.GetLength(0); l++)
+    for (int l = 0; l < matvelha.GetLength(0); l++)
     {
-        for(int c = 0; c < matvelha.GetLength(1); c++)
+        for (int c = 0; c < matvelha.GetLength(1); c++)
         {
             if (esc.Equals(matvelha[l, c]))
             {
@@ -81,33 +85,78 @@ bool VerificarDigito(char esc)
 //Atribui o "Valor" desejado na matriz
 void AtribuirEscolha()
 {
-    if (jogador % 2 == 0)
+    for (int l = 0; l < matvelha.GetLength(0); l++)
     {
-        for (int l = 0; l < matvelha.GetLength(0); l++)
+        for (int c = 0; c < matvelha.GetLength(1); c++)
         {
-            for (int c = 0; c < matvelha.GetLength(1); c++)
+            if (esc.Equals(matvelha[l, c]))
             {
-                if (esc.Equals(matvelha[l, c]))
+                if (jogador % 2 == 0)
                 {
                     matvelha[l, c] = 'X';
-                    jogador += 1;
+                    ImprimirMatriz();
+                    if (CondicaoVitoria())
+                    {
+                        Console.WriteLine("O jogo acabou! Vencedor jogador X.");
+                        fim = true;
+                        Console.ReadLine();
+                    }
                 }
+                else if (jogador % 2 == 1)
+                {
+                    matvelha[l, c] = 'O';
+                    ImprimirMatriz();
+                    if (CondicaoVitoria())
+                    {
+                        Console.WriteLine("O jogo acabou! Vencedor jogador O.");
+                        fim = true;
+                        Console.ReadLine();
+                    }
+                }
+                else if(esc != matvelha[l, c])
+                {
+                    Console.WriteLine("VELHA!!!!!");
+                    fim = true;
+                }
+                jogador += 1;
             }
         }
     }
-    else
+}
+
+bool CondicaoVitoria()
+{
+    if (rodada > 4)
     {
         for (int l = 0; l < matvelha.GetLength(0); l++)
         {
             for (int c = 0; c < matvelha.GetLength(1); c++)
             {
-                if (esc.Equals(matvelha[l, c]))
+                //Se as linhs forem iguais
+                if ((matvelha[l, 0] == matvelha[l, 1]) && (matvelha[l, 1] == matvelha[l, 2]))
                 {
-                    matvelha[l, c] = 'O';
-                    jogador += 1;
+                    vitoria = true;
+                    break;
+                }
+                //Colunas iguais
+                else if ((matvelha[0, c] == matvelha[1, c]) && (matvelha[1, c] == matvelha[2, c]))
+                {
+                    vitoria = true;
+                    break;
+
+                }
+                //Diagonal principal
+                else if ((matvelha[0, 0] == matvelha[1, 1]) && (matvelha[1, 1] == matvelha[2, 2]))
+                {
+                    vitoria = true;
+                }
+                //Diagonal secundária
+                else if ((matvelha[0, 2] == matvelha[1, 1]) && (matvelha[1, 1] == matvelha[2, 0]))
+                {
+                    vitoria = true;
                 }
             }
         }
     }
-
+    return vitoria;
 }
